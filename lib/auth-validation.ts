@@ -24,6 +24,8 @@ export const authMessages = {
     "Email delivery is optional in development. If email is not configured, check your server logs locally.",
   resetLinkInvalid:
     "This password reset link is invalid or has expired. Please request a new one.",
+  resetEmailDeliveryFailed:
+    "Password reset email could not be delivered. Please verify your Resend sender email and domain configuration.",
   unexpectedResetRequest:
     "We could not start the password reset process right now. Please try again in a moment.",
   unexpectedPasswordReset:

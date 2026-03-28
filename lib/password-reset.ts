@@ -7,6 +7,18 @@ type SendPasswordResetEmailParams = {
   resetUrl: string;
 };
 
+function getOptionalEnvValue(value: string | undefined) {
+  if (!value) return undefined;
+
+  const normalized = value.trim();
+
+  if (!normalized || normalized === "null" || normalized === "undefined") {
+    return undefined;
+  }
+
+  return normalized;
+}
+
 function hashResetToken(token: string) {
   return createHash("sha256").update(token).digest("hex");
 }
@@ -45,9 +57,60 @@ export async function sendPasswordResetEmail({
   to,
   resetUrl,
 }: SendPasswordResetEmailParams) {
+  const mailer = getOptionalEnvValue(process.env.MAIL_MAILER);
+  const smtpHost = getOptionalEnvValue(process.env.MAIL_HOST);
+  const smtpPort = Number(getOptionalEnvValue(process.env.MAIL_PORT) || "0");
+  const smtpUser = getOptionalEnvValue(process.env.MAIL_USERNAME);
+  const smtpPassword = getOptionalEnvValue(process.env.MAIL_PASSWORD);
+  const smtpEncryption = getOptionalEnvValue(process.env.MAIL_ENCRYPTION);
+  const smtpFromEmail = getOptionalEnvValue(process.env.MAIL_FROM_ADDRESS);
+  const smtpFromName =
+    getOptionalEnvValue(process.env.MAIL_FROM_NAME) || "Auth Starter";
   const apiKey = process.env.RESEND_API_KEY;
   const fromEmail = process.env.RESEND_FROM_EMAIL;
   const fromName = process.env.RESEND_FROM_NAME || "Auth Starter";
+
+  const subject = "Reset your password";
+  const html = `
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #18181b;">
+      <h2>Reset your password</h2>
+      <p>We received a request to reset your password.</p>
+      <p>
+        <a href="${resetUrl}" style="display:inline-block;padding:12px 18px;background:#18181b;color:#ffffff;text-decoration:none;border-radius:10px;">
+          Reset Password
+        </a>
+      </p>
+      <p>If you did not request this, you can safely ignore this email.</p>
+      <p>This link will expire in 1 hour.</p>
+    </div>
+  `;
+  const text = `Reset your password using this link: ${resetUrl}\n\nThis link will expire in 1 hour.`;
+
+  if (mailer === "smtp" && smtpHost && smtpPort && smtpFromEmail) {
+    const nodemailer = await import("nodemailer");
+    const transporter = nodemailer.createTransport({
+      host: smtpHost,
+      port: smtpPort,
+      secure: smtpEncryption === "ssl" || smtpPort === 465,
+      auth:
+        smtpUser && smtpPassword
+          ? {
+              user: smtpUser,
+              pass: smtpPassword,
+            }
+          : undefined,
+    });
+
+    await transporter.sendMail({
+      from: `${smtpFromName} <${smtpFromEmail}>`,
+      to,
+      subject,
+      html,
+      text,
+    });
+
+    return { delivered: true as const, provider: "smtp" as const };
+  }
 
   if (!apiKey || !fromEmail) {
     return { delivered: false, reason: "missing_config" as const };
@@ -62,28 +125,16 @@ export async function sendPasswordResetEmail({
     body: JSON.stringify({
       from: `${fromName} <${fromEmail}>`,
       to,
-      subject: "Reset your password",
-      html: `
-        <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #18181b;">
-          <h2>Reset your password</h2>
-          <p>We received a request to reset your password.</p>
-          <p>
-            <a href="${resetUrl}" style="display:inline-block;padding:12px 18px;background:#18181b;color:#ffffff;text-decoration:none;border-radius:10px;">
-              Reset Password
-            </a>
-          </p>
-          <p>If you did not request this, you can safely ignore this email.</p>
-          <p>This link will expire in 1 hour.</p>
-        </div>
-      `,
-      text: `Reset your password using this link: ${resetUrl}\n\nThis link will expire in 1 hour.`,
+      subject,
+      html,
+      text,
     }),
   });
 
   if (!response.ok) {
     const body = await response.text();
-    throw new Error(`Failed to send password reset email: ${body}`);
+    throw new Error(`RESEND_DELIVERY_FAILED: ${body}`);
   }
 
-  return { delivered: true as const };
+  return { delivered: true as const, provider: "resend" as const };
 }

@@ -246,6 +246,16 @@ export async function requestPasswordResetAction(
       return { error: authMessages.databaseUnavailable, values };
     }
 
+    if (error instanceof Error && error.message.startsWith("RESEND_DELIVERY_FAILED:")) {
+      console.error("Password reset email delivery failed", error.message);
+
+      return {
+        error: authMessages.resetEmailDeliveryFailed,
+        info: "If you are using Gmail as the sender, Resend will usually reject it unless the sender/domain is verified.",
+        values,
+      };
+    }
+
     console.error("Password reset request failed", error);
 
     return { error: authMessages.unexpectedResetRequest, values };

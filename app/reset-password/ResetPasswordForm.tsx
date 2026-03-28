@@ -38,6 +38,26 @@ export default function ResetPasswordForm({
   const formState = state ?? initialState;
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const passwordChecks = [
+    {
+      label: "Minimal 8 karakter",
+      valid: password.length >= 8,
+    },
+    {
+      label: "Ada huruf",
+      valid: /[A-Za-z]/.test(password),
+    },
+    {
+      label: "Ada angka",
+      valid: /\d/.test(password),
+    },
+  ];
+  const isPasswordStarted = password.length > 0;
+  const isConfirmStarted = confirmPassword.length > 0;
+  const isPasswordStrong = passwordChecks.every((check) => check.valid);
+  const isPasswordMatch = isConfirmStarted && password === confirmPassword;
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 p-4 dark:bg-zinc-950">
@@ -63,21 +83,32 @@ export default function ResetPasswordForm({
               >
                 New password
               </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="new-password"
-                required
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                aria-invalid={Boolean(formState.fieldErrors?.password)}
-                aria-describedby={
-                  formState.fieldErrors?.password ? "reset-password-error" : undefined
-                }
-                className={getInputClass(Boolean(formState.fieldErrors?.password))}
-                placeholder="••••••••"
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  required
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  aria-invalid={Boolean(formState.fieldErrors?.password)}
+                  aria-describedby={
+                    formState.fieldErrors?.password ? "reset-password-error" : undefined
+                  }
+                  className={`${getInputClass(
+                    Boolean(formState.fieldErrors?.password)
+                  )} pr-20`}
+                  placeholder="••••••••"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((value) => !value)}
+                  className="absolute inset-y-0 right-3 my-auto h-fit text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
+              </div>
               {formState.fieldErrors?.password && (
                 <p
                   id="reset-password-error"
@@ -86,6 +117,34 @@ export default function ResetPasswordForm({
                   {formState.fieldErrors.password}
                 </p>
               )}
+              <div className="mt-3 rounded-xl border border-zinc-200 bg-zinc-50/80 p-3 dark:border-zinc-800 dark:bg-zinc-950/60">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400">
+                  Password checklist
+                </p>
+                <div className="mt-2 space-y-2">
+                  {passwordChecks.map((check) => (
+                    <div
+                      key={check.label}
+                      className={`flex items-center gap-2 text-sm ${
+                        check.valid
+                          ? "text-emerald-600 dark:text-emerald-400"
+                          : "text-zinc-500 dark:text-zinc-400"
+                      }`}
+                    >
+                      <span
+                        className={`inline-flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold ${
+                          check.valid
+                            ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300"
+                            : "bg-zinc-200 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
+                        }`}
+                      >
+                        {check.valid ? "✓" : "•"}
+                      </span>
+                      <span>{check.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
 
             <div>
@@ -95,23 +154,34 @@ export default function ResetPasswordForm({
               >
                 Confirm new password
               </label>
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                autoComplete="new-password"
-                required
-                value={confirmPassword}
-                onChange={(event) => setConfirmPassword(event.target.value)}
-                aria-invalid={Boolean(formState.fieldErrors?.confirmPassword)}
-                aria-describedby={
-                  formState.fieldErrors?.confirmPassword
-                    ? "reset-confirm-password-error"
-                    : undefined
-                }
-                className={getInputClass(Boolean(formState.fieldErrors?.confirmPassword))}
-                placeholder="••••••••"
-              />
+              <div className="relative">
+                <input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  required
+                  value={confirmPassword}
+                  onChange={(event) => setConfirmPassword(event.target.value)}
+                  aria-invalid={Boolean(formState.fieldErrors?.confirmPassword)}
+                  aria-describedby={
+                    formState.fieldErrors?.confirmPassword
+                      ? "reset-confirm-password-error"
+                      : undefined
+                  }
+                  className={`${getInputClass(
+                    Boolean(formState.fieldErrors?.confirmPassword)
+                  )} pr-20`}
+                  placeholder="••••••••"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword((value) => !value)}
+                  className="absolute inset-y-0 right-3 my-auto h-fit text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                >
+                  {showConfirmPassword ? "Hide" : "Show"}
+                </button>
+              </div>
               {formState.fieldErrors?.confirmPassword && (
                 <p
                   id="reset-confirm-password-error"
@@ -120,9 +190,25 @@ export default function ResetPasswordForm({
                   {formState.fieldErrors.confirmPassword}
                 </p>
               )}
-              <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-                Use at least 8 characters with at least one letter and one number.
-              </p>
+              <div className="mt-2 min-h-6 text-sm">
+                {isConfirmStarted ? (
+                  <p
+                    className={
+                      isPasswordMatch
+                        ? "text-emerald-600 dark:text-emerald-400"
+                        : "text-amber-600 dark:text-amber-400"
+                    }
+                  >
+                    {isPasswordMatch
+                      ? "Password confirmation matches."
+                      : "Password confirmation does not match yet."}
+                  </p>
+                ) : (
+                  <p className="text-zinc-500 dark:text-zinc-400">
+                    Re-enter your password to confirm it.
+                  </p>
+                )}
+              </div>
             </div>
           </div>
 
@@ -137,11 +223,16 @@ export default function ResetPasswordForm({
 
           <button
             type="submit"
-            disabled={isPending}
+            disabled={isPending || !isPasswordStrong || !isPasswordMatch}
             className="flex w-full justify-center rounded-lg bg-zinc-900 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
           >
             {isPending ? "Resetting..." : "Reset password"}
           </button>
+          {!isPending && isPasswordStarted && (!isPasswordStrong || !isPasswordMatch) && (
+            <p className="text-center text-xs text-zinc-500 dark:text-zinc-400">
+              Complete the password checklist and make sure both passwords match.
+            </p>
+          )}
         </form>
 
         <div className="text-center text-sm text-zinc-600 dark:text-zinc-400">

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useActionState } from "react";
 import Link from "next/link";
 import SocialButtons from "../components/SocialButtons";
@@ -41,6 +42,7 @@ export default function LoginForm({
     initialState
   );
   const formState = state ?? initialState;
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-zinc-950 p-4">
@@ -102,19 +104,30 @@ export default function LoginForm({
                   Forgot password?
                 </Link>
               </div>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                aria-invalid={Boolean(formState.fieldErrors?.password)}
-                aria-describedby={
-                  formState.fieldErrors?.password ? "login-password-error" : undefined
-                }
-                className={getInputClass(Boolean(formState.fieldErrors?.password))}
-                placeholder="••••••••"
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  required
+                  aria-invalid={Boolean(formState.fieldErrors?.password)}
+                  aria-describedby={
+                    formState.fieldErrors?.password ? "login-password-error" : undefined
+                  }
+                  className={`${getInputClass(
+                    Boolean(formState.fieldErrors?.password)
+                  )} pr-20`}
+                  placeholder="••••••••"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((value) => !value)}
+                  className="absolute inset-y-0 right-3 my-auto h-fit text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
+              </div>
               {formState.fieldErrors?.password && (
                 <p
                   id="login-password-error"

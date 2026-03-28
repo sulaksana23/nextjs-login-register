@@ -132,8 +132,13 @@ The repository includes a visual preview of the main flows:
 - Login page
 - Register page
 - Protected dashboard page
+- Reset password page
 
 See the preview image above in the repository header section.
+
+### Reset Password Preview
+
+![Reset Password Preview](docs/images/reset-password-preview.svg)
 
 ## 📱 Responsive Notes
 

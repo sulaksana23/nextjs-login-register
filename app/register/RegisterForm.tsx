@@ -28,6 +28,8 @@ export default function RegisterForm() {
   const formState = state ?? initialState;
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const passwordChecks = [
     {
@@ -122,22 +124,33 @@ export default function RegisterForm() {
               >
                 Password
               </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="new-password"
-                minLength={8}
-                required
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                aria-invalid={Boolean(formState.fieldErrors?.password)}
-                aria-describedby={
-                  formState.fieldErrors?.password ? "password-error" : undefined
-                }
-                className={getInputClass(Boolean(formState.fieldErrors?.password))}
-                placeholder="••••••••"
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  minLength={8}
+                  required
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  aria-invalid={Boolean(formState.fieldErrors?.password)}
+                  aria-describedby={
+                    formState.fieldErrors?.password ? "password-error" : undefined
+                  }
+                  className={`${getInputClass(
+                    Boolean(formState.fieldErrors?.password)
+                  )} pr-20`}
+                  placeholder="••••••••"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((value) => !value)}
+                  className="absolute inset-y-0 right-3 my-auto h-fit text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
+              </div>
               {formState.fieldErrors?.password && (
                 <p id="password-error" className="mt-2 text-sm text-red-600 dark:text-red-400">
                   {formState.fieldErrors.password}
@@ -180,24 +193,35 @@ export default function RegisterForm() {
               >
                 Confirm Password
               </label>
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                autoComplete="new-password"
-                minLength={8}
-                required
-                value={confirmPassword}
-                onChange={(event) => setConfirmPassword(event.target.value)}
-                aria-invalid={Boolean(formState.fieldErrors?.confirmPassword)}
-                aria-describedby={
-                  formState.fieldErrors?.confirmPassword
-                    ? "confirm-password-error"
-                    : undefined
-                }
-                className={getInputClass(Boolean(formState.fieldErrors?.confirmPassword))}
-                placeholder="••••••••"
-              />
+              <div className="relative">
+                <input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  minLength={8}
+                  required
+                  value={confirmPassword}
+                  onChange={(event) => setConfirmPassword(event.target.value)}
+                  aria-invalid={Boolean(formState.fieldErrors?.confirmPassword)}
+                  aria-describedby={
+                    formState.fieldErrors?.confirmPassword
+                      ? "confirm-password-error"
+                      : undefined
+                  }
+                  className={`${getInputClass(
+                    Boolean(formState.fieldErrors?.confirmPassword)
+                  )} pr-20`}
+                  placeholder="••••••••"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword((value) => !value)}
+                  className="absolute inset-y-0 right-3 my-auto h-fit text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                >
+                  {showConfirmPassword ? "Hide" : "Show"}
+                </button>
+              </div>
               {formState.fieldErrors?.confirmPassword && (
                 <p
                   id="confirm-password-error"
