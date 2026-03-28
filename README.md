@@ -174,7 +174,6 @@ Important:
 
 - In this project, the correct secret key is `AUTH_SECRET`.
 - Do not put the secret value in the `Key` field on Vercel. The `Key` must stay `AUTH_SECRET`, and the secret goes in `Value`.
-- The build script already runs:
 - The production build script runs:
 
 ```bash
@@ -186,6 +185,16 @@ prisma generate && next build --webpack
 ```bash
 npm run db:migrate:deploy
 ```
+
+## ☕ Support
+
+If this project helps you, you can support future improvements here:
+
+[![Support on Trakteer](https://img.shields.io/badge/Support%20on-Trakteer-EF4444?style=for-the-badge)](https://trakteer.id/bali_techsolution)
+
+You can also visit the creator page directly:
+
+- [https://trakteer.id/bali_techsolution](https://trakteer.id/bali_techsolution)
 
 ## 📜 License
 
