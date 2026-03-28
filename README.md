@@ -22,6 +22,7 @@ A modern authentication system built with Next.js 16, Auth.js v5, Prisma 7, Post
 - **Authentication**: Register and log in with email/password.
 - **Auth.js v5**: Session handling and route protection powered by Auth.js.
 - **OAuth Ready**: Optional Google and GitHub sign-in providers.
+- **Forgot Password**: Secure password reset flow with one-time reset tokens.
 - **Prisma 7**: PostgreSQL integration with Prisma ORM.
 - **Tailwind CSS v4**: Modern UI styling.
 - **Responsive Design**: Works across mobile and desktop layouts.
@@ -163,11 +164,17 @@ AUTH_GOOGLE_ID=""
 AUTH_GOOGLE_SECRET=""
 AUTH_GITHUB_ID=""
 AUTH_GITHUB_SECRET=""
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
+RESEND_API_KEY=""
+RESEND_FROM_EMAIL=""
+RESEND_FROM_NAME="Bali Techsolution"
 ```
 
 Notes:
 
 - Use `AUTH_SECRET`, not `NEXTAUTH_SECRET`.
+- `NEXT_PUBLIC_APP_URL` is used to build password reset links.
+- Resend email delivery is optional. If `RESEND_API_KEY` and `RESEND_FROM_EMAIL` are not configured, reset links can still be generated locally and logged by the server in development.
 - Generate a secret with:
 
 ```bash
@@ -183,6 +190,32 @@ openssl rand -base64 32
 - Logout redirects users back to the login page with a success message.
 - Dashboard performs authenticated session checks and redirects guests to `/login`.
 - Lint, typecheck, and production build all pass.
+
+## ✉️ Forgot Password Email Setup
+
+This project supports password reset emails using Resend.
+
+Required environment variables:
+
+```env
+NEXT_PUBLIC_APP_URL="https://nextjs-login-register.vercel.app"
+RESEND_API_KEY=""
+RESEND_FROM_EMAIL="noreply@your-domain.com"
+RESEND_FROM_NAME="Bali Techsolution"
+```
+
+Setup steps:
+
+1. Create a Resend account.
+2. Add and verify your sending domain in Resend.
+3. Create an API key from the Resend dashboard.
+4. Add the variables above to your local `.env` and Vercel project settings.
+5. Set `NEXT_PUBLIC_APP_URL` to your deployed app URL so reset links point to the correct domain.
+6. Use a verified sender address for `RESEND_FROM_EMAIL`.
+
+Development note:
+
+- If `RESEND_API_KEY` and `RESEND_FROM_EMAIL` are missing, the app will still generate reset links locally and log them on the server for development use.
 
 ## ▲ Deploying to Vercel
 

@@ -8,6 +8,7 @@ import { loginAction, type AuthActionState } from "../actions/auth";
 type LoginFormProps = {
   isRegistered: boolean;
   isLoggedOut: boolean;
+  isReset: boolean;
   providers: {
     google: boolean;
     github: boolean;
@@ -32,6 +33,7 @@ function getInputClass(hasError: boolean) {
 export default function LoginForm({
   isRegistered,
   isLoggedOut,
+  isReset,
   providers,
 }: LoginFormProps) {
   const [state, action, isPending] = useActionState<AuthActionState, FormData>(
@@ -93,12 +95,12 @@ export default function LoginForm({
                 >
                   Password
                 </label>
-                <a
-                  href="#"
+                <Link
+                  href="/forgot-password"
                   className="text-sm font-medium text-zinc-950 hover:underline dark:text-zinc-50"
                 >
                   Forgot password?
-                </a>
+                </Link>
               </div>
               <input
                 id="password"
@@ -133,6 +135,12 @@ export default function LoginForm({
           {isLoggedOut && (
             <div className="rounded-md bg-blue-50 p-3 text-sm text-blue-700 dark:bg-blue-950/40 dark:text-blue-300">
               You have been logged out successfully.
+            </div>
+          )}
+
+          {isReset && (
+            <div className="rounded-md bg-emerald-50 p-3 text-sm text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
+              Your password has been reset. Please log in with your new password.
             </div>
           )}
 

@@ -6,6 +6,7 @@ type LoginPageProps = {
   searchParams: Promise<{
     registered?: string;
     loggedOut?: string;
+    reset?: string;
   }>;
 };
 
@@ -18,6 +19,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   const params = await searchParams;
   const isRegistered = params.registered === "1";
   const isLoggedOut = params.loggedOut === "1";
+  const isReset = params.reset === "1";
   const providers = {
     google: Boolean(process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET),
     github: Boolean(process.env.AUTH_GITHUB_ID && process.env.AUTH_GITHUB_SECRET),
@@ -27,6 +29,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
     <LoginForm
       isRegistered={isRegistered}
       isLoggedOut={isLoggedOut}
+      isReset={isReset}
       providers={providers}
     />
   );

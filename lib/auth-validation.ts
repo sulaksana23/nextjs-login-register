@@ -18,6 +18,16 @@ export const authMessages = {
   unexpectedRegister:
     "We could not create your account right now. Please try again in a moment.",
   unexpectedLogin: "We could not sign you in right now. Please try again in a moment.",
+  resetRequestSuccess:
+    "If an account exists for that email, a password reset link has been sent.",
+  resetRequestInfo:
+    "Email delivery is optional in development. If email is not configured, check your server logs locally.",
+  resetLinkInvalid:
+    "This password reset link is invalid or has expired. Please request a new one.",
+  unexpectedResetRequest:
+    "We could not start the password reset process right now. Please try again in a moment.",
+  unexpectedPasswordReset:
+    "We could not reset your password right now. Please try again in a moment.",
 } as const;
 
 export function isValidEmail(email: string) {
