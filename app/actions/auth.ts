@@ -21,14 +21,19 @@ export async function registerAction(
 ) {
   const email = getFormValue(formData, "email").toLowerCase();
   const password = getFormValue(formData, "password");
+  const confirmPassword = getFormValue(formData, "confirmPassword");
   const name = getFormValue(formData, "name");
 
-  if (!name || !email || !password) {
-    return { error: "Name, email, and password are required" };
+  if (!name || !email || !password || !confirmPassword) {
+    return { error: "Name, email, password, and confirm password are required" };
   }
 
   if (password.length < 8) {
     return { error: "Password must be at least 8 characters" };
+  }
+
+  if (password !== confirmPassword) {
+    return { error: "Password confirmation does not match" };
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
