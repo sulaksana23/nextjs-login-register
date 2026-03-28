@@ -18,6 +18,7 @@ A modern authentication system built with Next.js 16, Auth.js v5, Prisma 7, Post
 - Demo URL: [https://nextjs-login-register.vercel.app](https://nextjs-login-register.vercel.app)
 - Login page: [https://nextjs-login-register.vercel.app/login](https://nextjs-login-register.vercel.app/login)
 - Register page: [https://nextjs-login-register.vercel.app/register](https://nextjs-login-register.vercel.app/register)
+- Forgot password: [https://nextjs-login-register.vercel.app/forgot-password](https://nextjs-login-register.vercel.app/forgot-password)
 
 ## 🚀 Feature List
 
