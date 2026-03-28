@@ -11,6 +11,8 @@ A modern authentication system built with Next.js 16, Auth.js v5, Prisma 7, Post
 
 ![Project Preview](docs/images/app-preview.svg)
 
+![Reset Password Preview](docs/images/reset-password-preview.svg)
+
 ## 🔗 Live Demo
 
 - Demo URL: [https://nextjs-login-register.vercel.app](https://nextjs-login-register.vercel.app)
@@ -135,10 +137,6 @@ The repository includes a visual preview of the main flows:
 - Reset password page
 
 See the preview image above in the repository header section.
-
-### Reset Password Preview
-
-![Reset Password Preview](docs/images/reset-password-preview.svg)
 
 ## 📱 Responsive Notes
 
