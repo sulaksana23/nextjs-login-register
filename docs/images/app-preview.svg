@@ -1,0 +1,107 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="720" fill="#0A0A0B"/>
+  <rect x="32" y="32" width="1216" height="656" rx="28" fill="#111215" stroke="#23242A"/>
+  <text x="72" y="98" fill="#F5F7FA" font-family="Arial, sans-serif" font-size="34" font-weight="700">
+    Next.js Login Register
+  </text>
+  <text x="72" y="132" fill="#9CA3AF" font-family="Arial, sans-serif" font-size="18">
+    Authentication flow preview: login, register, and protected dashboard
+  </text>
+
+  <rect x="72" y="176" width="352" height="448" rx="22" fill="#1A1B20" stroke="#2A2C33"/>
+  <text x="104" y="230" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="24" font-weight="700">
+    Login
+  </text>
+  <text x="104" y="262" fill="#8E97A7" font-family="Arial, sans-serif" font-size="15">
+    Sign in with email, password, or OAuth
+  </text>
+  <text x="104" y="316" fill="#E5E7EB" font-family="Arial, sans-serif" font-size="16">
+    Email address
+  </text>
+  <rect x="104" y="330" width="288" height="44" rx="10" fill="#F8EFB2"/>
+  <text x="122" y="358" fill="#21232A" font-family="Arial, sans-serif" font-size="15">
+    sulaksana60@gmail.com
+  </text>
+  <text x="104" y="404" fill="#E5E7EB" font-family="Arial, sans-serif" font-size="16">
+    Password
+  </text>
+  <rect x="104" y="418" width="288" height="44" rx="10" fill="#F8EFB2"/>
+  <text x="122" y="446" fill="#21232A" font-family="Arial, sans-serif" font-size="18">
+    ••••••••••
+  </text>
+  <rect x="104" y="490" width="288" height="48" rx="12" fill="#F5F7FA"/>
+  <text x="219" y="520" fill="#1A1B20" font-family="Arial, sans-serif" font-size="18" font-weight="700">
+    Log in
+  </text>
+  <rect x="104" y="568" width="136" height="40" rx="12" fill="#202229" stroke="#31343B"/>
+  <rect x="256" y="568" width="136" height="40" rx="12" fill="#202229" stroke="#31343B"/>
+  <text x="158" y="594" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="16" font-weight="700">
+    Google
+  </text>
+  <text x="312" y="594" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="16" font-weight="700">
+    GitHub
+  </text>
+
+  <rect x="464" y="176" width="352" height="448" rx="22" fill="#1A1B20" stroke="#2A2C33"/>
+  <text x="496" y="230" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="24" font-weight="700">
+    Register
+  </text>
+  <text x="496" y="262" fill="#8E97A7" font-family="Arial, sans-serif" font-size="15">
+    Create an account with password validation
+  </text>
+  <text x="496" y="316" fill="#E5E7EB" font-family="Arial, sans-serif" font-size="16">
+    Full Name
+  </text>
+  <rect x="496" y="330" width="288" height="40" rx="10" fill="#24262D"/>
+  <text x="514" y="356" fill="#8E97A7" font-family="Arial, sans-serif" font-size="15">
+    John Doe
+  </text>
+  <text x="496" y="396" fill="#E5E7EB" font-family="Arial, sans-serif" font-size="16">
+    Email address
+  </text>
+  <rect x="496" y="410" width="288" height="40" rx="10" fill="#24262D"/>
+  <text x="514" y="436" fill="#8E97A7" font-family="Arial, sans-serif" font-size="15">
+    you@example.com
+  </text>
+  <text x="496" y="476" fill="#E5E7EB" font-family="Arial, sans-serif" font-size="16">
+    Password
+  </text>
+  <rect x="496" y="490" width="288" height="40" rx="10" fill="#24262D"/>
+  <rect x="496" y="548" width="288" height="76" rx="14" fill="#121318" stroke="#2A2C33"/>
+  <text x="512" y="576" fill="#B6BED0" font-family="Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="1.5">
+    PASSWORD CHECKLIST
+  </text>
+  <text x="512" y="602" fill="#9CA3AF" font-family="Arial, sans-serif" font-size="14">
+    • Minimal 8 karakter
+  </text>
+  <text x="512" y="620" fill="#9CA3AF" font-family="Arial, sans-serif" font-size="14">
+    • Ada huruf dan angka
+  </text>
+
+  <rect x="856" y="176" width="352" height="448" rx="22" fill="#1A1B20" stroke="#2A2C33"/>
+  <rect x="856" y="176" width="352" height="68" rx="22" fill="#17181D"/>
+  <text x="888" y="218" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="24" font-weight="700">
+    Dashboard
+  </text>
+  <rect x="1078" y="194" width="96" height="32" rx="10" fill="#F5F7FA"/>
+  <text x="1104" y="215" fill="#17181D" font-family="Arial, sans-serif" font-size="15" font-weight="700">
+    Logout
+  </text>
+  <rect x="888" y="276" width="288" height="278" rx="18" fill="#21232A" stroke="#30333A"/>
+  <text x="916" y="326" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="20" font-weight="700">
+    Hello, I Wayan Bayu Sulaksana!
+  </text>
+  <text x="916" y="356" fill="#76A9FA" font-family="Arial, sans-serif" font-size="15">
+    You are logged in via Auth.js (v5)
+  </text>
+  <rect x="916" y="392" width="232" height="116" rx="14" fill="#1B1D22" stroke="#31343B"/>
+  <text x="940" y="426" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="16" font-weight="700">
+    Profile Info
+  </text>
+  <text x="940" y="458" fill="#AAB1C1" font-family="Arial, sans-serif" font-size="14">
+    Email: sulaksana60@gmail.com
+  </text>
+  <text x="940" y="486" fill="#AAB1C1" font-family="Arial, sans-serif" font-size="14">
+    User ID: cmn9pi5m2000004k4x88v0afn
+  </text>
+</svg>

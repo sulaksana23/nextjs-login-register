@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { logoutAction } from "../actions/auth";
@@ -35,10 +36,13 @@ export default async function DashboardPage() {
         <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-8 shadow-sm">
           <div className="flex items-center gap-4">
             {session.user.image && (
-              <img
+              <Image
                 src={session.user.image}
                 alt={session.user.name || "User"}
+                width={64}
+                height={64}
                 className="h-16 w-16 rounded-full border border-zinc-200 dark:border-zinc-800"
+                unoptimized
               />
             )}
             <div>

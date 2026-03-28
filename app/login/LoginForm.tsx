@@ -3,14 +3,42 @@
 import { useActionState } from "react";
 import Link from "next/link";
 import SocialButtons from "../components/SocialButtons";
-import { loginAction } from "../actions/auth";
+import { loginAction, type AuthActionState } from "../actions/auth";
 
 type LoginFormProps = {
   isRegistered: boolean;
+  isLoggedOut: boolean;
+  providers: {
+    google: boolean;
+    github: boolean;
+  };
 };
 
-export default function LoginForm({ isRegistered }: LoginFormProps) {
-  const [state, action, isPending] = useActionState(loginAction, null);
+const initialState: AuthActionState = {
+  values: {
+    email: "",
+  },
+  fieldErrors: {},
+};
+
+function getInputClass(hasError: boolean) {
+  return `mt-1 block w-full rounded-lg border bg-white px-4 py-2 text-zinc-900 focus:border-blue-500 focus:ring-blue-500 dark:bg-zinc-800 dark:text-zinc-100 sm:text-sm ${
+    hasError
+      ? "border-red-500 dark:border-red-500"
+      : "border-zinc-300 dark:border-zinc-700"
+  }`;
+}
+
+export default function LoginForm({
+  isRegistered,
+  isLoggedOut,
+  providers,
+}: LoginFormProps) {
+  const [state, action, isPending] = useActionState<AuthActionState, FormData>(
+    loginAction,
+    initialState
+  );
+  const formState = state ?? initialState;
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-zinc-950 p-4">
@@ -24,7 +52,7 @@ export default function LoginForm({ isRegistered }: LoginFormProps) {
           </p>
         </div>
 
-        <form className="mt-8 space-y-6" action={action}>
+        <form className="mt-8 space-y-6" action={action} noValidate>
           <div className="space-y-4">
             <div>
               <label
@@ -39,9 +67,22 @@ export default function LoginForm({ isRegistered }: LoginFormProps) {
                 type="email"
                 autoComplete="email"
                 required
-                className="mt-1 block w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-blue-500 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 sm:text-sm"
+                defaultValue={formState.values?.email ?? ""}
+                aria-invalid={Boolean(formState.fieldErrors?.email)}
+                aria-describedby={
+                  formState.fieldErrors?.email ? "login-email-error" : undefined
+                }
+                className={getInputClass(Boolean(formState.fieldErrors?.email))}
                 placeholder="you@example.com"
               />
+              {formState.fieldErrors?.email && (
+                <p
+                  id="login-email-error"
+                  className="mt-2 text-sm text-red-600 dark:text-red-400"
+                >
+                  {formState.fieldErrors.email}
+                </p>
+              )}
             </div>
 
             <div className="space-y-1">
@@ -65,21 +106,42 @@ export default function LoginForm({ isRegistered }: LoginFormProps) {
                 type="password"
                 autoComplete="current-password"
                 required
-                className="mt-1 block w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-blue-500 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 sm:text-sm"
+                aria-invalid={Boolean(formState.fieldErrors?.password)}
+                aria-describedby={
+                  formState.fieldErrors?.password ? "login-password-error" : undefined
+                }
+                className={getInputClass(Boolean(formState.fieldErrors?.password))}
                 placeholder="••••••••"
               />
+              {formState.fieldErrors?.password && (
+                <p
+                  id="login-password-error"
+                  className="mt-2 text-sm text-red-600 dark:text-red-400"
+                >
+                  {formState.fieldErrors.password}
+                </p>
+              )}
             </div>
           </div>
 
           {isRegistered && (
-            <div className="rounded-md bg-emerald-50 p-2 text-sm text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
+            <div className="rounded-md bg-emerald-50 p-3 text-sm text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
               Registration successful. Please log in.
             </div>
           )}
 
-          {state?.error && (
-            <div className="rounded-md bg-red-50 p-2 text-sm text-red-600 dark:bg-red-900/30 dark:text-red-400">
-              {state.error}
+          {isLoggedOut && (
+            <div className="rounded-md bg-blue-50 p-3 text-sm text-blue-700 dark:bg-blue-950/40 dark:text-blue-300">
+              You have been logged out successfully.
+            </div>
+          )}
+
+          {formState.error && (
+            <div
+              role="alert"
+              className="rounded-md bg-red-50 p-3 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-300"
+            >
+              {formState.error}
             </div>
           )}
 
@@ -94,7 +156,7 @@ export default function LoginForm({ isRegistered }: LoginFormProps) {
           </div>
         </form>
 
-        <SocialButtons />
+        <SocialButtons providers={providers} />
 
         <div className="text-center text-sm">
           <p className="text-zinc-600 dark:text-zinc-400">

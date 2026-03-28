@@ -1,10 +1,50 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { signIn } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 
-export default function SocialButtons() {
+type SocialButtonsProps = {
+  providers: {
+    google: boolean;
+    github: boolean;
+  };
+};
+
+type AvailableProvider = {
+  id: string;
+  label: string;
+  icon: ReactNode;
+};
+
+export default function SocialButtons({ providers }: SocialButtonsProps) {
+  const availableProviders: AvailableProvider[] = [];
+
+  if (providers.google) {
+    availableProviders.push({
+      id: "google",
+      label: "Google",
+      icon: <FcGoogle className="h-5 w-5" />,
+    });
+  }
+
+  if (providers.github) {
+    availableProviders.push({
+      id: "github",
+      label: "GitHub",
+      icon: <FaGithub className="h-5 w-5" />,
+    });
+  }
+
+  if (availableProviders.length === 0) {
+    return (
+      <p className="text-center text-sm text-zinc-500 dark:text-zinc-400">
+        Google and GitHub sign-in are hidden until their environment variables are configured.
+      </p>
+    );
+  }
+
   const handleSignIn = (provider: string) => {
     signIn(provider, { callbackUrl: "/dashboard" });
   };
@@ -22,21 +62,17 @@ export default function SocialButtons() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <button
-          onClick={() => handleSignIn("google")}
-          className="flex items-center justify-center gap-2 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2 text-sm font-medium text-zinc-900 dark:text-zinc-50 hover:bg-zinc-50 dark:hover:bg-zinc-800 outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 transition-all"
-        >
-          <FcGoogle className="h-5 w-5" />
-          Google
-        </button>
-        <button
-          onClick={() => handleSignIn("github")}
-          className="flex items-center justify-center gap-2 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2 text-sm font-medium text-zinc-900 dark:text-zinc-50 hover:bg-zinc-50 dark:hover:bg-zinc-800 outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 transition-all"
-        >
-          <FaGithub className="h-5 w-5" />
-          GitHub
-        </button>
+      <div className={`grid gap-4 ${availableProviders.length === 1 ? "grid-cols-1" : "grid-cols-2"}`}>
+        {availableProviders.map((provider) => (
+          <button
+            key={provider.id}
+            onClick={() => handleSignIn(provider.id)}
+            className="flex items-center justify-center gap-2 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-900 outline-none transition-all hover:bg-zinc-50 focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50 dark:hover:bg-zinc-800"
+          >
+            {provider.icon}
+            {provider.label}
+          </button>
+        ))}
       </div>
     </div>
   );

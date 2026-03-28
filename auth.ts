@@ -9,7 +9,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(
     prisma as unknown as Parameters<typeof PrismaAdapter>[0]
   ),
-  session: { strategy: "jwt" },
+  session: {
+    strategy: "jwt",
+    maxAge: 60 * 60 * 24 * 7,
+  },
   pages: { signIn: "/login" },
   callbacks: {
     async jwt({ token, user }) {
