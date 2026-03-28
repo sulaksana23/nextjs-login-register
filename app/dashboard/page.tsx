@@ -1,29 +1,21 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { logoutAction } from "../actions/auth";
+import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
   const session = await auth();
 
   if (!session || !session.user) {
-    // Middleware should handle this, but as a fallback:
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p>Redirecting...</p>
-      </div>
-    );
+    redirect("/login");
   }
 
   const user = await prisma.user.findUnique({
-    where: { email: session.user.email! },
+    where: { id: session.user.id },
   });
 
   if (!user) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p>User not found. Try logging in again.</p>
-      </div>
-    );
+    redirect("/login");
   }
 
   return (
