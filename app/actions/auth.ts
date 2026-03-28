@@ -1,17 +1,34 @@
 "use server";
 
+import { signIn, signOut } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
-import { cookies } from "next/headers";
+import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
+import { Prisma } from "@/prisma/generated/client";
 
-export async function registerAction(state: any, formData: FormData) {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-  const name = formData.get("name") as string;
+export type AuthActionState = {
+  error?: string;
+};
 
-  if (!email || !password) {
-    return { error: "Email and password are required" };
+function getFormValue(formData: FormData, key: string) {
+  return String(formData.get(key) ?? "").trim();
+}
+
+export async function registerAction(
+  _state: AuthActionState | null | undefined,
+  formData: FormData
+) {
+  const email = getFormValue(formData, "email").toLowerCase();
+  const password = getFormValue(formData, "password");
+  const name = getFormValue(formData, "name");
+
+  if (!name || !email || !password) {
+    return { error: "Name, email, and password are required" };
+  }
+
+  if (password.length < 8) {
+    return { error: "Password must be at least 8 characters" };
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -24,52 +41,59 @@ export async function registerAction(state: any, formData: FormData) {
         name,
       },
     });
-  } catch (err: any) {
-    if (err.code === "P2002") {
+  } catch (error: unknown) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
       return { error: "Email already exists" };
     }
+
+    if (error instanceof Prisma.PrismaClientInitializationError) {
+      return { error: "Database connection failed" };
+    }
+
+    console.error("Register failed", error);
+
     return { error: "Something went wrong" };
   }
 
-  redirect("/login");
+  redirect("/login?registered=1");
 }
 
-export async function loginAction(state: any, formData: FormData) {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
+export async function loginAction(
+  _state: AuthActionState | null | undefined,
+  formData: FormData
+) {
+  const email = getFormValue(formData, "email").toLowerCase();
+  const password = getFormValue(formData, "password");
 
   if (!email || !password) {
     return { error: "Email and password are required" };
   }
 
-  const user = await prisma.user.findUnique({
-    where: { email },
-  });
+  try {
+    await signIn("credentials", {
+      email,
+      password,
+      redirectTo: "/dashboard",
+    });
+  } catch (error) {
+    if (error instanceof AuthError) {
+      console.error("Login failed", error.type, error.cause);
 
-  if (!user) {
-    return { error: "Invalid credentials" };
+      switch (error.type) {
+        case "CredentialsSignin":
+        case "CallbackRouteError":
+          return { error: "Invalid credentials" };
+        case "AdapterError":
+        case "SessionTokenError":
+          return { error: "Database connection failed" };
+        default:
+          return { error: "Something went wrong" };
+      }
+    }
+    throw error;
   }
-
-  const isValid = await bcrypt.compare(password, user.password);
-
-  if (!isValid) {
-    return { error: "Invalid credentials" };
-  }
-
-  // Set a session cookie
-  const cookieStore = await cookies();
-  cookieStore.set("session", user.id, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 60 * 60 * 24 * 7, // 1 week
-    path: "/",
-  });
-
-  redirect("/dashboard");
 }
 
 export async function logoutAction() {
-  const cookieStore = await cookies();
-  cookieStore.delete("session");
-  redirect("/login");
+  await signOut({ redirectTo: "/login" });
 }

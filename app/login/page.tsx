@@ -3,9 +3,13 @@
 import { useActionState } from "react";
 import { loginAction } from "../actions/auth";
 import Link from "next/link";
+import SocialButtons from "../components/SocialButtons";
+import { useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
+  const searchParams = useSearchParams();
   const [state, action, isPending] = useActionState(loginAction, null);
+  const isRegistered = searchParams.get("registered") === "1";
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-zinc-950 p-4">
@@ -66,6 +70,12 @@ export default function LoginPage() {
             </div>
           </div>
 
+          {isRegistered && (
+            <div className="rounded-md bg-emerald-50 p-2 text-sm text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
+              Registration successful. Please log in.
+            </div>
+          )}
+
           {state?.error && (
             <div className="rounded-md bg-red-50 dark:bg-red-900/30 p-2 text-sm text-red-600 dark:text-red-400">
               {state.error}
@@ -83,9 +93,11 @@ export default function LoginPage() {
           </div>
         </form>
 
+        <SocialButtons />
+
         <div className="text-center text-sm">
           <p className="text-zinc-600 dark:text-zinc-400">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link
               href="/register"
               className="font-medium text-zinc-900 dark:text-zinc-50 hover:underline"

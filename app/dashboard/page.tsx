@@ -1,23 +1,29 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import Link from "next/link";
 import { logoutAction } from "../actions/auth";
 
 export default async function DashboardPage() {
-  const cookieStore = await cookies();
-  const session = cookieStore.get("session");
+  const session = await auth();
 
-  if (!session) {
-    redirect("/login");
+  if (!session || !session.user) {
+    // Middleware should handle this, but as a fallback:
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <p>Redirecting...</p>
+      </div>
+    );
   }
 
   const user = await prisma.user.findUnique({
-    where: { id: session.value },
+    where: { email: session.user.email! },
   });
 
   if (!user) {
-    redirect("/login");
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <p>User not found. Try logging in again.</p>
+      </div>
+    );
   }
 
   return (
@@ -35,19 +41,40 @@ export default async function DashboardPage() {
       </nav>
       <main className="flex-1 p-8">
         <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-8 shadow-sm">
-          <h2 className="text-2xl font-semibold text-zinc-900 dark:text-white">
-            Hello, {user.name || "User"}!
-          </h2>
-          <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-            You are successfully logged in using your PostgreSQL database.
-          </p>
+          <div className="flex items-center gap-4">
+            {session.user.image && (
+              <img
+                src={session.user.image}
+                alt={session.user.name || "User"}
+                className="h-16 w-16 rounded-full border border-zinc-200 dark:border-zinc-800"
+              />
+            )}
+            <div>
+              <h2 className="text-2xl font-semibold text-zinc-900 dark:text-white">
+                Hello, {session.user.name || "User"}!
+              </h2>
+              <p className="text-zinc-600 dark:text-zinc-400">
+                You are logged in via{" "}
+                <span className="font-medium text-blue-600 dark:text-blue-400">
+                  Auth.js (v5)
+                </span>
+              </p>
+            </div>
+          </div>
+
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 p-6">
               <h3 className="font-medium text-zinc-900 dark:text-white">Profile Info</h3>
-              <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-                Email: {user.email}
-              </p>
+              <div className="mt-4 space-y-2">
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                  <span className="font-semibold">Email:</span> {session.user.email}
+                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                  <span className="font-semibold">User ID:</span> {session.user.id}
+                </p>
+              </div>
             </div>
+            {/* Add more cards here */}
           </div>
         </div>
       </main>

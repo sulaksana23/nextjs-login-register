@@ -69,10 +69,14 @@ export default function RegisterPage() {
                 name="password"
                 type="password"
                 autoComplete="new-password"
+                minLength={8}
                 required
                 className="mt-1 block w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-4 py-2 text-zinc-900 dark:text-zinc-100 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                 placeholder="••••••••"
               />
+              <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+                Use at least 8 characters.
+              </p>
             </div>
           </div>
 
