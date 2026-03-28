@@ -21,20 +21,20 @@ export default async function DashboardPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-zinc-50 dark:bg-zinc-950">
-      <nav className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-8 py-4">
+      <nav className="flex flex-col gap-3 border-b border-zinc-200 bg-white px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-8 dark:border-zinc-800 dark:bg-zinc-900">
         <h1 className="text-xl font-bold text-zinc-900 dark:text-white">Dashboard</h1>
         <form action={logoutAction}>
           <button
             type="submit"
-            className="rounded-lg bg-zinc-900 dark:bg-zinc-100 px-4 py-2 text-sm font-medium text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200"
+            className="w-full rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 sm:w-auto dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
           >
             Logout
           </button>
         </form>
       </nav>
-      <main className="flex-1 p-8">
-        <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-8 shadow-sm">
-          <div className="flex items-center gap-4">
+      <main className="flex-1 p-4 sm:p-8">
+        <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8 dark:border-zinc-800 dark:bg-zinc-900">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
             {session.user.image && (
               <Image
                 src={session.user.image}

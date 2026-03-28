@@ -6,10 +6,18 @@ A modern authentication system built with Next.js 16, Auth.js v5, Prisma 7, Post
 ![Prisma 7](https://img.shields.io/badge/Prisma-7-2D3748?logo=prisma)
 ![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC?logo=tailwind-css)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Open%20App-111827?style=for-the-badge)](https://nextjs-login-register.vercel.app)
+[![Support on Trakteer](https://img.shields.io/badge/Support%20on-Trakteer-EF4444?style=for-the-badge)](https://trakteer.id/bali_techsolution)
 
 ![Project Preview](docs/images/app-preview.svg)
 
-## 🚀 Features
+## 🔗 Live Demo
+
+- Demo URL: [https://nextjs-login-register.vercel.app](https://nextjs-login-register.vercel.app)
+- Login page: [https://nextjs-login-register.vercel.app/login](https://nextjs-login-register.vercel.app/login)
+- Register page: [https://nextjs-login-register.vercel.app/register](https://nextjs-login-register.vercel.app/register)
+
+## 🚀 Feature List
 
 - **Authentication**: Register and log in with email/password.
 - **Auth.js v5**: Session handling and route protection powered by Auth.js.
@@ -17,6 +25,10 @@ A modern authentication system built with Next.js 16, Auth.js v5, Prisma 7, Post
 - **Prisma 7**: PostgreSQL integration with Prisma ORM.
 - **Tailwind CSS v4**: Modern UI styling.
 - **Responsive Design**: Works across mobile and desktop layouts.
+- **Protected Routes**: Unauthenticated users are redirected away from `/dashboard`.
+- **Persistent Session**: Login session is stored and reused across requests.
+- **Clear Errors**: Invalid email, password, duplicate account, and database errors are surfaced clearly.
+- **Portfolio Friendly**: Includes preview asset, live demo, install guide, deploy notes, and support link.
 
 ## 🛠️ Tech Stack
 
@@ -85,6 +97,17 @@ Before you begin, ensure you have the following installed:
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+## 📦 Quick Start
+
+```bash
+git clone https://github.com/sulaksana23/nextjs-login-register.git
+cd nextjs-login-register
+npm install
+cp .env.example .env
+npx prisma migrate dev
+npm run dev
+```
+
 ## 📁 Project Structure
 
 ```text
@@ -110,6 +133,12 @@ The repository includes a visual preview of the main flows:
 - Protected dashboard page
 
 See the preview image above in the repository header section.
+
+## 📱 Responsive Notes
+
+- Login and register forms use a compact centered layout that scales cleanly on mobile.
+- Dashboard spacing now collapses more gracefully on small screens.
+- CTA buttons and cards stack vertically on narrow viewports for easier tapping.
 
 ## 🔐 Authentication Flow
 
@@ -146,6 +175,14 @@ openssl rand -base64 32
 ```
 
 - If you change `AUTH_SECRET`, existing login sessions may become invalid.
+
+## ✅ Stability Checklist
+
+- Login flow tested with clear email and password validation.
+- Register flow validates required fields, password rules, and duplicate email conflicts.
+- Logout redirects users back to the login page with a success message.
+- Dashboard performs authenticated session checks and redirects guests to `/login`.
+- Lint, typecheck, and production build all pass.
 
 ## ▲ Deploying to Vercel
 
